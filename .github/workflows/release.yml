@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag, for example v2026.05.18'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Validate plugin metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            tag="${{ inputs.tag }}"
+          fi
+
+          if [[ ! "$tag" =~ ^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}[a-z]?$ ]]; then
+            echo "Release tags must use vYYYY.MM.DD or vYYYY.MM.DDa format: $tag" >&2
+            exit 1
+          fi
+
+          version="${tag#v}"
+          plg_version="$(sed -n 's/^<!ENTITY version[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          if [[ "$plg_version" != "$version" ]]; then
+            echo "Tag $tag does not match PLG version $plg_version" >&2
+            exit 1
+          fi
+
+          xmllint --noout plugins/apprise.plg
+          xmllint --noout agents/Apprise.xml
+
+          agent_md5="$(sed -n 's/^<!ENTITY agentMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_agent_md5="$(md5sum agents/Apprise.xml | awk '{print $1}')"
+          if [[ "$agent_md5" != "$actual_agent_md5" ]]; then
+            echo "Agent MD5 mismatch: PLG has $agent_md5, actual is $actual_agent_md5" >&2
+            exit 1
+          fi
+
+          apprise_version="$(sed -n 's/^<!ENTITY appriseVersion[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          apprise_url="$(sed -n 's/^<!ENTITY appriseURL[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          apprise_url="${apprise_url//&appriseVersion;/$apprise_version}"
+          apprise_md5="$(sed -n 's/^<!ENTITY appriseMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          curl -fsSL "$apprise_url" -o /tmp/apprise-go-linux-amd64
+          actual_apprise_md5="$(md5sum /tmp/apprise-go-linux-amd64 | awk '{print $1}')"
+          if [[ "$apprise_md5" != "$actual_apprise_md5" ]]; then
+            echo "apprise-go MD5 mismatch: PLG has $apprise_md5, actual is $actual_apprise_md5" >&2
+            exit 1
+          fi
+
+          icon_url="$(sed -n 's/^<!ENTITY iconURL[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          icon_md5="$(sed -n 's/^<!ENTITY iconMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          curl -fsSL "$icon_url" -o /tmp/apprise.png
+          actual_icon_md5="$(md5sum /tmp/apprise.png | awk '{print $1}')"
+          if [[ "$icon_md5" != "$actual_icon_md5" ]]; then
+            echo "Icon MD5 mismatch: PLG has $icon_md5, actual is $actual_icon_md5" >&2
+            exit 1
+          fi
+
+          {
+            echo "tag=$tag"
+            echo "version=$version"
+          } >> "$GITHUB_ENV"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          install_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/plugins/apprise.plg"
+          body="$(mktemp)"
+          {
+            echo "Unraid Apprise plugin ${version}"
+            echo
+            echo "Manual install URL:"
+            echo
+            echo "$install_url"
+            echo
+            echo "This plugin installs apprise-go and adds an Apprise notification target to Unraid."
+          } > "$body"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --title "$tag" --notes-file "$body"
+          else
+            gh release create "$tag" --title "$tag" --notes-file "$body"
+          fi

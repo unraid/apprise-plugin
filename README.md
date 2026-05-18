@@ -26,3 +26,10 @@ apprise --help
   Notification Agents**.
 - The installed CLI can be used in scripts, including `/boot/config/go`, for
   custom notification workflows.
+
+## Releases
+
+Plugin versions use Unraid's date-sortable format, `YYYY.MM.DD` with an
+optional letter suffix for multiple releases on the same day. Push a matching
+tag such as `v2026.05.18` to validate the plugin metadata and create or update
+the GitHub release.
