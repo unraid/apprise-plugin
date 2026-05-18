@@ -1,0 +1,119 @@
+name: Update apprise-go
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check latest apprise-go release
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          latest_version="$(gh api repos/unraid/apprise-go/releases/latest --jq .tag_name)"
+          current_version="$(sed -n 's/^<!ENTITY appriseVersion[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+
+          {
+            echo "latest_version=$latest_version"
+            echo "current_version=$current_version"
+          } >> "$GITHUB_OUTPUT"
+
+          if [[ "$latest_version" == "$current_version" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          url="https://github.com/unraid/apprise-go/releases/download/${latest_version}/apprise-go-linux-amd64"
+          curl -fsSL "$url" -o /tmp/apprise-go-linux-amd64
+          latest_md5="$(md5sum /tmp/apprise-go-linux-amd64 | awk '{print $1}')"
+
+          {
+            echo "changed=true"
+            echo "latest_md5=$latest_md5"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Update plugin metadata
+        if: steps.latest.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python3 scripts/update_apprise_go.py \
+            --latest-version '${{ steps.latest.outputs.latest_version }}' \
+            --latest-md5 '${{ steps.latest.outputs.latest_md5 }}'
+
+      - name: Validate updated plugin metadata
+        if: steps.latest.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          for path in ("plugins/apprise.plg", "agents/Apprise.xml"):
+              ET.parse(path)
+          PY
+
+          expected="$(sed -n 's/^<!ENTITY appriseMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual="$(md5sum /tmp/apprise-go-linux-amd64 | awk '{print $1}')"
+          if [[ "$expected" != "$actual" ]]; then
+            echo "apprise-go MD5 mismatch: PLG has $expected, actual is $actual" >&2
+            exit 1
+          fi
+
+      - name: Open update pull request
+        if: steps.latest.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LATEST_VERSION: ${{ steps.latest.outputs.latest_version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="${LATEST_VERSION#v}"
+          branch="update/apprise-go-${version}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add plugins/apprise.plg
+          git commit -m "Update apprise-go to ${LATEST_VERSION}"
+          git push --force-with-lease origin "$branch"
+
+          body="$(mktemp)"
+          {
+            echo "Updates the bundled apprise-go binary to ${LATEST_VERSION}."
+            echo
+            echo "Validation performed by workflow:"
+            echo "- downloaded Linux amd64 release binary"
+            echo "- recalculated apprise-go MD5"
+            echo "- advanced Unraid plugin version using date-sortable format"
+            echo "- parsed PLG and notification-agent XML"
+          } > "$body"
+
+          existing="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')"
+          if [[ -n "$existing" ]]; then
+            gh pr edit "$existing" --title "Update apprise-go to ${LATEST_VERSION}" --body-file "$body"
+          else
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Update apprise-go to ${LATEST_VERSION}" \
+              --body-file "$body"
+          fi
