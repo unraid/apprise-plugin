@@ -1,0 +1,68 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name           "apprise">
+<!ENTITY author         "Lime Technology">
+<!ENTITY version        "0.2.2">
+<!ENTITY appriseVersion "v0.2.2">
+<!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise/main">
+<!ENTITY pluginURL      "&gitURL;/plugins/&name;.plg">
+<!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
+<!ENTITY appriseMD5     "c322e4a15600c02de488907f1422a275">
+]>
+<PLUGIN name="&name;"
+        author="&author;"
+        version="&version;"
+        pluginURL="&pluginURL;"
+        min="6.12.0"
+        support="https://github.com/unraid/apprise/issues"
+        icon="bell">
+
+<CHANGES>
+##&name;
+###&version;
+- Initial release. Installs apprise-go &appriseVersion; as /usr/bin/apprise.
+</CHANGES>
+
+<!-- Prepare the persistent plugin cache on the flash device. -->
+<FILE Run="/bin/bash" Method="install">
+<INLINE>
+mkdir -p /boot/config/plugins/&name;
+</INLINE>
+</FILE>
+
+<!-- Download the apprise-go release binary. -->
+<FILE Name="/boot/config/plugins/&name;/apprise-go-linux-amd64-&appriseVersion;">
+<URL>"&appriseURL;"</URL>
+<MD5>&appriseMD5;</MD5>
+</FILE>
+
+<!-- Install the binary into the runtime filesystem. -->
+<FILE Run="/bin/bash" Method="install">
+<INLINE>
+install -m 0755 /boot/config/plugins/&name;/apprise-go-linux-amd64-&appriseVersion; /usr/bin/apprise
+find /boot/config/plugins/&name; -type f -name 'apprise-go-linux-amd64-*' ! -name 'apprise-go-linux-amd64-&appriseVersion;' -delete 2>/dev/null
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " Plugin &name; is installed."
+echo " Version: &version;"
+echo " apprise-go: &appriseVersion;"
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<!-- Remove the runtime binary and cached release asset. -->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+rm -f /usr/bin/apprise
+rm -rf /boot/config/plugins/&name;
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " Plugin &name; has been removed."
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+</PLUGIN>
