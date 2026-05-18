@@ -2,12 +2,16 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "0.2.2">
+<!ENTITY version        "0.2.2.1">
 <!ENTITY appriseVersion "v0.2.2">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY pluginURL      "&gitURL;/plugins/&name;.plg">
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
 <!ENTITY appriseMD5     "c322e4a15600c02de488907f1422a275">
+<!ENTITY agentURL       "&gitURL;/agents/Apprise.xml">
+<!ENTITY agentMD5       "b40f1b90e8760d8419faf738e66d220d">
+<!ENTITY iconURL        "https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png">
+<!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -20,6 +24,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add Apprise notification agent to Unraid notification settings.
+
+###0.2.2
 - Initial release. Installs apprise-go &appriseVersion; as /usr/bin/apprise.
 </CHANGES>
 
@@ -36,10 +43,23 @@ mkdir -p /boot/config/plugins/&name;
 <MD5>&appriseMD5;</MD5>
 </FILE>
 
+<!-- Download the notification agent icon. -->
+<FILE Name="/boot/config/plugins/&name;/apprise.png">
+<URL>"&iconURL;"</URL>
+<MD5>&iconMD5;</MD5>
+</FILE>
+
+<!-- Add the Apprise notification agent definition to Dynamix. -->
+<FILE Name="/usr/local/emhttp/plugins/dynamix/agents/Apprise.xml">
+<URL>"&agentURL;"</URL>
+<MD5>&agentMD5;</MD5>
+</FILE>
+
 <!-- Install the binary into the runtime filesystem. -->
 <FILE Run="/bin/bash" Method="install">
 <INLINE>
 install -m 0755 /boot/config/plugins/&name;/apprise-go-linux-amd64-&appriseVersion; /usr/bin/apprise
+install -m 0644 /boot/config/plugins/&name;/apprise.png /usr/local/emhttp/plugins/dynamix/icons/apprise.png
 find /boot/config/plugins/&name; -type f -name 'apprise-go-linux-amd64-*' ! -name 'apprise-go-linux-amd64-&appriseVersion;' -delete 2>/dev/null
 
 echo ""
@@ -56,6 +76,10 @@ echo ""
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 rm -f /usr/bin/apprise
+rm -f /usr/local/emhttp/plugins/dynamix/agents/Apprise.xml
+rm -f /usr/local/emhttp/plugins/dynamix/icons/apprise.png
+rm -f /boot/config/plugins/dynamix/notifications/agents/Apprise.sh
+rm -f /boot/config/plugins/dynamix/notifications/agents-disabled/Apprise.sh
 rm -rf /boot/config/plugins/&name;
 
 echo ""

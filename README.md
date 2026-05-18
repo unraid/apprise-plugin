@@ -22,5 +22,7 @@ apprise --help
 
 - The plugin caches the release binary on the flash device under
   `/boot/config/plugins/apprise` so it is restored across reboots.
+- The plugin adds an `Apprise` target under **Settings > Notifications >
+  Notification Agents**.
 - The installed CLI can be used in scripts, including `/boot/config/go`, for
   custom notification workflows.

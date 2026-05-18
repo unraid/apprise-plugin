@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <Agent>
+    <Name>Apprise</Name>
+    <Variables>
+      <Variable Help="One or more Apprise URLs separated by spaces, commas, semicolons, or new lines. Example: discord://WEBHOOK_ID/WEBHOOK_TOKEN" Desc="Apprise URL(s)" Default="">APPRISE_URLS</Variable>
+      <Variable Help="Optional Apprise tags used to filter configured URLs. Separate multiple tags with commas or spaces. Specify 'none' to send to every configured URL." Desc="Tags" Default="none">TAGS</Variable>
+      <Variable Help="Specify the fields which are included in the title of the notification." Desc="Notification Title" Default="$SUBJECT">TITLE</Variable>
+      <Variable Help="Specify the fields which are included in the message body of the notification." Desc="Notification Message" Default="$DESCRIPTION">MESSAGE</Variable>
+    </Variables>
+    <Script>
+      <![CDATA[
+#!/bin/bash
+############
+{0}
+############
+
+SCRIPTNAME=$(basename "$0")
+LOG="/var/log/notify_${SCRIPTNAME%.*}"
+
+if ! command -v apprise >/dev/null 2>&1; then
+  echo "apprise command not found" >>"$LOG"
+  logger -t "$SCRIPTNAME" -- "Failed sending notification (apprise command not found)"
+  exit 1
+fi
+
+TITLE=$(echo -e "$TITLE")
+MESSAGE=$(echo -e "$MESSAGE")
+
+case "$IMPORTANCE" in
+  normal)
+    NOTIFY_TYPE="info"
+    ;;
+  warning)
+    NOTIFY_TYPE="warning"
+    ;;
+  alert)
+    NOTIFY_TYPE="failure"
+    ;;
+  *)
+    NOTIFY_TYPE="info"
+    ;;
+esac
+
+CONFIG=$(mktemp /tmp/apprise-agent.XXXXXX)
+trap 'rm -f "$CONFIG"' EXIT
+printf '%s\n' "$APPRISE_URLS" > "$CONFIG"
+
+if [[ -z "$(tr -d '[:space:];,' < "$CONFIG")" ]]; then
+  echo "No Apprise URLs configured" >>"$LOG"
+  logger -t "$SCRIPTNAME" -- "Failed sending notification (no Apprise URLs configured)"
+  exit 1
+fi
+
+args=(-c "$CONFIG" -t "$TITLE" -b "$MESSAGE" -n "$NOTIFY_TYPE")
+if [[ -n "$TAGS" && "$TAGS" != "none" ]]; then
+  tags="${TAGS//,/ }"
+  for tag in $tags; do
+    args+=(-g "$tag")
+  done
+fi
+
+output=$(apprise "${args[@]}" 2>&1)
+status=$?
+if [[ "$status" -ne 0 ]]; then
+  echo "$output" >>"$LOG"
+  logger -t "$SCRIPTNAME" -- "Failed sending notification ($output)"
+fi
+exit "$status"
+      ]]>
+    </Script>
+  </Agent>
