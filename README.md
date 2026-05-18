@@ -9,7 +9,7 @@ CLI at `/usr/bin/apprise`.
 Install the plugin from Community Applications, or install it manually with:
 
 ```sh
-https://raw.githubusercontent.com/unraid/apprise/main/plugins/apprise.plg
+https://raw.githubusercontent.com/unraid/apprise-plugin/main/plugins/apprise.plg
 ```
 
 After install:

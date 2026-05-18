@@ -4,7 +4,7 @@
 <!ENTITY author         "Lime Technology">
 <!ENTITY version        "0.2.2">
 <!ENTITY appriseVersion "v0.2.2">
-<!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise/main">
+<!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY pluginURL      "&gitURL;/plugins/&name;.plg">
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
 <!ENTITY appriseMD5     "c322e4a15600c02de488907f1422a275">
@@ -14,7 +14,7 @@
         version="&version;"
         pluginURL="&pluginURL;"
         min="6.12.0"
-        support="https://github.com/unraid/apprise/issues"
+        support="https://github.com/unraid/apprise-plugin/issues"
         icon="bell">
 
 <CHANGES>

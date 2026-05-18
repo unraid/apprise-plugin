@@ -2,6 +2,6 @@
 <CommunityApplications>
   <Profile>Official Unraid plugin repository for the Apprise notification CLI.</Profile>
   <Icon>https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png</Icon>
-  <WebPage>https://github.com/unraid/apprise</WebPage>
+  <WebPage>https://github.com/unraid/apprise-plugin</WebPage>
   <Forum>https://forums.unraid.net/</Forum>
 </CommunityApplications>
