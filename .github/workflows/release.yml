@@ -45,8 +45,11 @@ jobs:
             exit 1
           fi
 
-          xmllint --noout plugins/apprise.plg
-          xmllint --noout agents/Apprise.xml
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          for path in ("plugins/apprise.plg", "agents/Apprise.xml"):
+              ET.parse(path)
+          PY
 
           agent_md5="$(sed -n 's/^<!ENTITY agentMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
           actual_agent_md5="$(md5sum agents/Apprise.xml | awk '{print $1}')"
