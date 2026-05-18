@@ -2,14 +2,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "0.2.2.1">
+<!ENTITY version        "0.2.2.2">
 <!ENTITY appriseVersion "v0.2.2">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY pluginURL      "&gitURL;/plugins/&name;.plg">
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
 <!ENTITY appriseMD5     "c322e4a15600c02de488907f1422a275">
 <!ENTITY agentURL       "&gitURL;/agents/Apprise.xml">
-<!ENTITY agentMD5       "b40f1b90e8760d8419faf738e66d220d">
+<!ENTITY agentMD5       "4eea1e4806667aa56f75594af1675227">
 <!ENTITY iconURL        "https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 ]>
@@ -24,6 +24,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Fix Apprise notification agent config parsing by using a .cfg file.
+
+###0.2.2.1
 - Add Apprise notification agent to Unraid notification settings.
 
 ###0.2.2

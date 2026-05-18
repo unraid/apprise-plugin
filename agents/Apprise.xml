@@ -41,7 +41,7 @@ case "$IMPORTANCE" in
     ;;
 esac
 
-CONFIG=$(mktemp /tmp/apprise-agent.XXXXXX)
+CONFIG=$(mktemp /tmp/apprise-agent.XXXXXX.cfg)
 trap 'rm -f "$CONFIG"' EXIT
 printf '%s\n' "$APPRISE_URLS" > "$CONFIG"
 
