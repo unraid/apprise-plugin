@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.05.19a">
+<!ENTITY version        "2026.05.19b">
 <!ENTITY appriseVersion "v0.2.2">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/v&version;">
@@ -14,7 +14,7 @@
 <!ENTITY iconURL        "https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 <!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
-<!ENTITY readmeMD5      "453dca67e1f952215414c6bb6a1a304e">
+<!ENTITY readmeMD5      "dbc1e4b3258cf315b279ad18b0e2c77e">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -27,6 +27,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Remove script usage note from plugin description.
+
+###2026.05.19a
 - Expand plugin markdown description.
 
 ###2026.05.19
