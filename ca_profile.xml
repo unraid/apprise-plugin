@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<CommunityApplications>
-  <Description>apprise</Description>
-  <Profile>Official Unraid plugin repository for the Apprise notification CLI.</Profile>
-  <Icon>https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png</Icon>
-  <WebPage>https://github.com/unraid/apprise-plugin</WebPage>
-  <Support>https://forums.unraid.net/forum/61-plugin-support/</Support>
-  <Forum>https://forums.unraid.net/forum/61-plugin-support/</Forum>
-</CommunityApplications>

@@ -78,6 +78,13 @@ jobs:
             exit 1
           fi
 
+          readme_md5="$(sed -n 's/^<!ENTITY readmeMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_readme_md5="$(md5sum plugin/README.md | awk '{print $1}')"
+          if [[ "$readme_md5" != "$actual_readme_md5" ]]; then
+            echo "README MD5 mismatch: PLG has $readme_md5, actual is $actual_readme_md5" >&2
+            exit 1
+          fi
+
           {
             echo "tag=$tag"
             echo "version=$version"

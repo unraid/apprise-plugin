@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.05.18b">
+<!ENTITY version        "2026.05.19">
 <!ENTITY appriseVersion "v0.2.2">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/v&version;">
@@ -13,6 +13,8 @@
 <!ENTITY agentMD5       "243c3850c46374183330fc5e80e47527">
 <!ENTITY iconURL        "https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
+<!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
+<!ENTITY readmeMD5      "a0611359e799e15c5048c8f3b64b6b05">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -25,6 +27,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Add plugin markdown description.
+
+###2026.05.18b
 - Clarify Apprise URL and tag filter help text.
 
 ###2026.05.18a
@@ -40,6 +45,7 @@
 <FILE Run="/bin/bash" Method="install">
 <INLINE>
 mkdir -p /boot/config/plugins/&name;
+mkdir -p /usr/local/emhttp/plugins/&name;
 </INLINE>
 </FILE>
 
@@ -59,6 +65,12 @@ mkdir -p /boot/config/plugins/&name;
 <FILE Name="/usr/local/emhttp/plugins/dynamix/agents/Apprise.xml">
 <URL>"&agentURL;"</URL>
 <MD5>&agentMD5;</MD5>
+</FILE>
+
+<!-- Add the plugin markdown description shown by the Unraid plugin manager. -->
+<FILE Name="/usr/local/emhttp/plugins/&name;/README.md">
+<URL>"&readmeURL;"</URL>
+<MD5>&readmeMD5;</MD5>
 </FILE>
 
 <!-- Install the binary into the runtime filesystem. -->
@@ -84,6 +96,7 @@ echo ""
 rm -f /usr/bin/apprise
 rm -f /usr/local/emhttp/plugins/dynamix/agents/Apprise.xml
 rm -f /usr/local/emhttp/plugins/dynamix/icons/apprise.png
+rm -rf /usr/local/emhttp/plugins/&name;
 rm -f /boot/config/plugins/dynamix/notifications/agents/Apprise.sh
 rm -f /boot/config/plugins/dynamix/notifications/agents-disabled/Apprise.sh
 rm -rf /boot/config/plugins/&name;
