@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.05.18a">
+<!ENTITY version        "2026.05.18b">
 <!ENTITY appriseVersion "v0.2.2">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/v&version;">
@@ -10,7 +10,7 @@
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
 <!ENTITY appriseMD5     "c322e4a15600c02de488907f1422a275">
 <!ENTITY agentURL       "&releaseURL;/agents/Apprise.xml">
-<!ENTITY agentMD5       "4eea1e4806667aa56f75594af1675227">
+<!ENTITY agentMD5       "243c3850c46374183330fc5e80e47527">
 <!ENTITY iconURL        "https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 ]>
@@ -25,6 +25,9 @@
 <CHANGES>
 ##&name;
 ###&version;
+- Clarify Apprise URL and tag filter help text.
+
+###2026.05.18a
 - Fetch the notification agent definition from the matching plugin tag.
 - Fix Apprise notification agent config parsing by using a .cfg file.
 - Add Apprise notification agent to Unraid notification settings.
