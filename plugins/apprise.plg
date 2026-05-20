@@ -1,4 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
+<!-- SPDX-License-Identifier: BSD-2-Clause -->
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">

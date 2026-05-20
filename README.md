@@ -27,6 +27,10 @@ apprise --help
 - Third-party license notices are installed with the plugin from the matching
   upstream `apprise-go` release under `/usr/local/emhttp/plugins/apprise`.
 
+## License
+
+This plugin is licensed under the BSD 2-Clause License. See `LICENSE`.
+
 ## Releases
 
 Releases use two versions:
