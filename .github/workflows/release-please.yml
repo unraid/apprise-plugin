@@ -78,3 +78,24 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       tag: ${{ needs.release-please.outputs.tag_name }}
+
+  publish-plugin-release:
+    needs:
+      - release-please
+      - validate-plugin-release
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
+      - name: Upload plugin release artifact
+        env:
+          GH_TOKEN: ${{ secrets.UNRAID_BOT_GITHUB_ADMIN_TOKEN || github.token }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "$RELEASE_TAG" plugins/apprise.plg --clobber
