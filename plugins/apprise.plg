@@ -3,9 +3,11 @@
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
 <!ENTITY version        "2026.05.20">
+<!ENTITY pluginVersion  "0.0.0">
+<!ENTITY releaseTag     "main">
 <!ENTITY appriseVersion "v0.2.4">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
-<!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/v&version;">
+<!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
 <!ENTITY pluginURL      "&gitURL;/plugins/&name;.plg">
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
 <!ENTITY appriseMD5     "9ffccd3d6e38a50be385e1bb8b0b02af">

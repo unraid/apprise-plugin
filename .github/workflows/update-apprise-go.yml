@@ -92,8 +92,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$branch"
-          git add plugins/apprise.plg
-          git commit -m "Update apprise-go to ${LATEST_VERSION}"
+          git add plugins/apprise.plg .changeset
+          git commit -m "fix: update apprise-go to ${LATEST_VERSION}"
           git push --force-with-lease origin "$branch"
 
           body="$(mktemp)"
@@ -103,7 +103,7 @@ jobs:
             echo "Validation performed by workflow:"
             echo "- downloaded Linux amd64 release binary"
             echo "- recalculated apprise-go MD5"
-            echo "- advanced Unraid plugin version using date-sortable format"
+            echo "- created a Knope patch changeset for the next plugin release"
             echo "- parsed PLG and notification-agent XML"
           } > "$body"
 

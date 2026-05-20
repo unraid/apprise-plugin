@@ -27,12 +27,23 @@ apprise --help
 
 ## Releases
 
-Plugin versions use Unraid's date-sortable format, `YYYY.MM.DD` with an
-optional letter suffix for multiple releases on the same day. Push a matching
-tag such as `v2026.05.18a` to validate the plugin metadata and create or
-update the GitHub release.
+Releases use two versions:
+
+- `VERSION` is the internal SemVer version managed by Knope and used for
+  GitHub release tags such as `v0.1.0`.
+- The PLG `version` entity is the Unraid plugin manager build version. Release
+  prep writes it as `YYYY.MM.DD.HHMM.BUILD-INTERNAL_VERSION`, matching the
+  build-number style used by other Unraid plugins.
+
+Use `knope document-change` to add release notes for user-facing changes. Use
+`knope release` to prepare the release commit, update `CHANGELOG.md`, update
+the PLG release metadata, create Knope's package tag plus a `vX.Y.Z` release
+tag, and push the commit and tags. The `vX.Y.Z` tag push validates the plugin
+metadata and creates or updates the GitHub release.
 
 The `Update apprise-go` workflow checks for new
 [`unraid/apprise-go`](https://github.com/unraid/apprise-go) releases every six
 hours. When a newer release exists, it updates the bundled binary version and
-MD5, advances the plugin version, and opens a pull request.
+MD5, creates a Knope patch changeset, and opens a pull request. Merging that
+update does not create a release by itself; the next Knope release consumes the
+changeset and publishes the versioned plugin release.

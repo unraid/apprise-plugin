@@ -3,11 +3,11 @@ name: Release
 on:
   push:
     tags:
-      - 'v[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]*'
+      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag, for example v2026.05.18'
+        description: 'Internal release tag, for example v0.1.0'
         required: true
         type: string
 
@@ -33,15 +33,31 @@ jobs:
             tag="${{ inputs.tag }}"
           fi
 
-          if [[ ! "$tag" =~ ^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}[a-z]?$ ]]; then
-            echo "Release tags must use vYYYY.MM.DD or vYYYY.MM.DDa format: $tag" >&2
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tags must use internal SemVer format, for example v0.1.0: $tag" >&2
             exit 1
           fi
 
-          version="${tag#v}"
+          internal_version="${tag#v}"
+          plugin_version="$(sed -n 's/^<!ENTITY pluginVersion[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          if [[ "$plugin_version" != "$internal_version" ]]; then
+            echo "Tag $tag does not match PLG internal version $plugin_version" >&2
+            exit 1
+          fi
+
+          release_tag="$(sed -n 's/^<!ENTITY releaseTag[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          if [[ "$release_tag" != "$tag" ]]; then
+            echo "Tag $tag does not match PLG release tag $release_tag" >&2
+            exit 1
+          fi
+
           plg_version="$(sed -n 's/^<!ENTITY version[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
-          if [[ "$plg_version" != "$version" ]]; then
-            echo "Tag $tag does not match PLG version $plg_version" >&2
+          if [[ ! "$plg_version" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.[0-9]+- ]]; then
+            echo "PLG version must use external build format YYYY.MM.DD.HHMM.BUILD-${internal_version}: $plg_version" >&2
+            exit 1
+          fi
+          if [[ "${plg_version#*-}" != "$internal_version" ]]; then
+            echo "PLG version must end with exact internal version ${internal_version}: $plg_version" >&2
             exit 1
           fi
 
@@ -87,7 +103,8 @@ jobs:
 
           {
             echo "tag=$tag"
-            echo "version=$version"
+            echo "internal_version=$internal_version"
+            echo "plg_version=$plg_version"
           } >> "$GITHUB_ENV"
 
       - name: Create GitHub release
@@ -100,7 +117,9 @@ jobs:
           install_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/plugins/apprise.plg"
           body="$(mktemp)"
           {
-            echo "Unraid Apprise plugin ${version}"
+            echo "Unraid Apprise plugin ${internal_version}"
+            echo
+            echo "Unraid plugin manager version: ${plg_version}"
             echo
             echo "Manual install URL:"
             echo
