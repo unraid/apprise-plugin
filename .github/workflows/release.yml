@@ -1,6 +1,12 @@
 name: Release
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Internal release tag, for example v0.1.0'
+        required: true
+        type: string
   push:
     tags:
       - 'v*.*.*'
@@ -30,6 +36,8 @@ jobs:
 
           tag="${GITHUB_REF_NAME}"
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            tag="${{ inputs.tag }}"
+          elif [[ "${GITHUB_EVENT_NAME}" == "workflow_call" ]]; then
             tag="${{ inputs.tag }}"
           fi
 

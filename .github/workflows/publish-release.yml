@@ -1,4 +1,4 @@
-name: Publish Release Tag
+name: Publish Release
 
 on:
   pull_request:
@@ -12,11 +12,13 @@ permissions:
   contents: write
 
 jobs:
-  publish-release-tag:
+  publish-tag:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.head_ref == 'knope/release' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -25,7 +27,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Push release tag
+      - name: Create release tag
+        id: release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -34,6 +37,7 @@ jobs:
 
           version="$(cat VERSION)"
           tag="v${version}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
 
           if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}" >/dev/null 2>&1; then
             echo "Release tag ${tag} already exists"
@@ -45,3 +49,9 @@ jobs:
             "repos/${GITHUB_REPOSITORY}/git/refs" \
             -f ref="refs/tags/${tag}" \
             -f sha="$(git rev-parse HEAD)"
+
+  create-github-release:
+    needs: publish-tag
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.publish-tag.outputs.tag }}
