@@ -1,4 +1,16 @@
 # Changelog
+## [0.1.0](https://github.com/unraid/apprise-plugin/compare/v0.0.1...v0.1.0) (2026-05-20)
+
+
+### Features
+
+* **release:** switch to release-please ([#9](https://github.com/unraid/apprise-plugin/issues/9)) ([46d4022](https://github.com/unraid/apprise-plugin/commit/46d40221f8cd5f575c721553178a23ce979cb419))
+
+
+### Bug Fixes
+
+* **release:** create GitHub release in publish workflow ([#7](https://github.com/unraid/apprise-plugin/issues/7)) ([03a99d0](https://github.com/unraid/apprise-plugin/commit/03a99d0fc4f57e9db30d0dd9ff295625d8de349c))
+
 ## 0.0.1 (2026-05-20)
 
 ### Features
