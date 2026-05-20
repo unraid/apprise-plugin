@@ -1,4 +1,11 @@
 # Changelog
+## [0.1.1](https://github.com/unraid/apprise-plugin/compare/v0.1.0...v0.1.1) (2026-05-20)
+
+
+### Bug Fixes
+
+* **release:** honor workflow input tag ([#11](https://github.com/unraid/apprise-plugin/issues/11)) ([505519e](https://github.com/unraid/apprise-plugin/commit/505519ef58422b7600e480bfef2f09b5d054c0bd))
+
 ## [0.1.0](https://github.com/unraid/apprise-plugin/compare/v0.0.1...v0.1.0) (2026-05-20)
 
 
