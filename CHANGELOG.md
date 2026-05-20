@@ -1,4 +1,11 @@
 # Changelog
+## [0.1.2](https://github.com/unraid/apprise-plugin/compare/v0.1.1...v0.1.2) (2026-05-20)
+
+
+### Bug Fixes
+
+* **release:** publish plugin release asset ([#13](https://github.com/unraid/apprise-plugin/issues/13)) ([e394ad8](https://github.com/unraid/apprise-plugin/commit/e394ad830f11d7c303ed6746debfeb4a440776e4))
+
 ## [0.1.1](https://github.com/unraid/apprise-plugin/compare/v0.1.0...v0.1.1) (2026-05-20)
 
 

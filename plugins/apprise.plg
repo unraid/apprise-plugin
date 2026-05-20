@@ -3,9 +3,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.05.20.1542.3-0.1.1">
-<!ENTITY pluginVersion  "0.1.1">
-<!ENTITY releaseTag     "v0.1.1">
+<!ENTITY version        "2026.05.20.1606.5-0.1.2">
+<!ENTITY pluginVersion  "0.1.2">
+<!ENTITY releaseTag     "v0.1.2">
 <!ENTITY appriseVersion "v0.2.4">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
 <!ENTITY appriseRepoURL "https://raw.githubusercontent.com/unraid/apprise-go/&appriseVersion;">
@@ -34,6 +34,11 @@
 <CHANGES>
 ##&name;
 ###&version; (&pluginVersion;)
+### Bug Fixes
+
+* **release:** publish plugin release asset ([#13](https://github.com/unraid/apprise-plugin/issues/13)) ([e394ad8](https://github.com/unraid/apprise-plugin/commit/e394ad830f11d7c303ed6746debfeb4a440776e4))
+
+###2026.05.20.1542.3-0.1.1 (0.1.1)
 ### Bug Fixes
 
 * **release:** honor workflow input tag ([#11](https://github.com/unraid/apprise-plugin/issues/11)) ([505519e](https://github.com/unraid/apprise-plugin/commit/505519ef58422b7600e480bfef2f09b5d054c0bd))
