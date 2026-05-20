@@ -48,8 +48,9 @@ def external_version(internal_version: str, build_number: str, date: str | None)
 
 def latest_changelog_entry(changelog: Path, internal_version: str) -> str:
     text = changelog.read_text()
+    version = re.escape(internal_version)
     header = re.search(
-        rf"^##\s+{re.escape(internal_version)}(?:\s+\([^)]+\))?\s*$",
+        rf"^##\s+(?:{version}|\[{version}\]|\[{version}\]\([^)]+\))(?:\s+\([^)]+\))?\s*$",
         text,
         flags=re.MULTILINE,
     )

@@ -19,30 +19,6 @@ def entity(pattern: re.Pattern[str], text: str, name: str) -> str:
     return match.group(1)
 
 
-def changeset_path(latest_version: str) -> Path:
-    safe_version = latest_version.removeprefix("v").replace(".", "-")
-    return Path(".changeset") / f"update-apprise-go-{safe_version}.md"
-
-
-def write_changeset(latest_version: str) -> None:
-    path = changeset_path(latest_version)
-    path.parent.mkdir(exist_ok=True)
-    path.write_text(
-        "\n".join(
-            [
-                "---",
-                "default: patch",
-                "---",
-                "",
-                f"# Update apprise-go to {latest_version}",
-                "",
-                f"The plugin now installs apprise-go {latest_version}.",
-                "",
-            ]
-        )
-    )
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--latest-version", required=True)
@@ -75,9 +51,7 @@ def main() -> None:
     text = APPRISE_ICON_MD5_RE.sub(f'<!ENTITY iconMD5        "{args.latest_icon_md5}">', text, count=1)
 
     plg.write_text(text)
-    write_changeset(args.latest_version)
     print(f"Updated apprise-go {old_apprise_version} -> {args.latest_version}")
-    print(f"Created Knope changeset {changeset_path(args.latest_version)}")
 
 
 if __name__ == "__main__":

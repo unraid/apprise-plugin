@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
@@ -127,7 +127,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$branch"
-          git add plugins/apprise.plg .changeset
+          git add plugins/apprise.plg
           git commit -m "fix: update apprise-go to ${LATEST_VERSION}"
           git push --force-with-lease origin "$branch"
 
@@ -138,17 +138,17 @@ jobs:
             echo "Validation performed by workflow:"
             echo "- downloaded Linux amd64 release binary"
             echo "- recalculated apprise-go MD5"
-            echo "- created a Knope patch changeset for the next plugin release"
+            echo "- left release notes to release-please via the conventional commit"
             echo "- parsed PLG and notification-agent XML"
           } > "$body"
 
           existing="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')"
           if [[ -n "$existing" ]]; then
-            gh pr edit "$existing" --title "Update apprise-go to ${LATEST_VERSION}" --body-file "$body"
+            gh pr edit "$existing" --title "fix: update apprise-go to ${LATEST_VERSION}" --body-file "$body"
           else
             gh pr create \
               --base main \
               --head "$branch" \
-              --title "Update apprise-go to ${LATEST_VERSION}" \
+              --title "fix: update apprise-go to ${LATEST_VERSION}" \
               --body-file "$body"
           fi
