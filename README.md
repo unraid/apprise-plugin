@@ -24,6 +24,8 @@ apprise --help
   `/boot/config/plugins/apprise` so it is restored across reboots.
 - The plugin adds an `Apprise` target under **Settings > Notifications >
   Notification Agents**.
+- Third-party license notices are installed with the plugin from the matching
+  upstream `apprise-go` release under `/usr/local/emhttp/plugins/apprise`.
 
 ## Releases
 

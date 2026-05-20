@@ -6,6 +6,9 @@ from pathlib import Path
 
 APPRISE_VERSION_RE = re.compile(r'<!ENTITY appriseVersion\s+"([^"]+)">')
 APPRISE_MD5_RE = re.compile(r'<!ENTITY appriseMD5\s+"([^"]+)">')
+APPRISE_LICENSE_MD5_RE = re.compile(r'<!ENTITY appriseLicenseMD5\s+"([^"]+)">')
+APPRISE_NOTICE_MD5_RE = re.compile(r'<!ENTITY appriseNoticeMD5\s+"([^"]+)">')
+APPRISE_ICON_MD5_RE = re.compile(r'<!ENTITY iconMD5\s+"([^"]+)">')
 
 
 def entity(pattern: re.Pattern[str], text: str, name: str) -> str:
@@ -27,7 +30,7 @@ def write_changeset(latest_version: str) -> None:
         "\n".join(
             [
                 "---",
-                'default: patch',
+                "default: patch",
                 "---",
                 "",
                 f"# Update apprise-go to {latest_version}",
@@ -43,6 +46,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--latest-version", required=True)
     parser.add_argument("--latest-md5", required=True)
+    parser.add_argument("--latest-license-md5", required=True)
+    parser.add_argument("--latest-notice-md5", required=True)
+    parser.add_argument("--latest-icon-md5", required=True)
     parser.add_argument("--plg", default="plugins/apprise.plg")
     args = parser.parse_args()
 
@@ -59,6 +65,13 @@ def main() -> None:
         f'<!ENTITY appriseVersion "{args.latest_version}">', text, count=1
     )
     text = APPRISE_MD5_RE.sub(f'<!ENTITY appriseMD5     "{args.latest_md5}">', text, count=1)
+    text = APPRISE_LICENSE_MD5_RE.sub(
+        f'<!ENTITY appriseLicenseMD5 "{args.latest_license_md5}">', text, count=1
+    )
+    text = APPRISE_NOTICE_MD5_RE.sub(
+        f'<!ENTITY appriseNoticeMD5 "{args.latest_notice_md5}">', text, count=1
+    )
+    text = APPRISE_ICON_MD5_RE.sub(f'<!ENTITY iconMD5        "{args.latest_icon_md5}">', text, count=1)
 
     plg.write_text(text)
     write_changeset(args.latest_version)

@@ -43,9 +43,20 @@ jobs:
           curl -fsSL "$url" -o /tmp/apprise-go-linux-amd64
           latest_md5="$(md5sum /tmp/apprise-go-linux-amd64 | awk '{print $1}')"
 
+          notice_base_url="https://raw.githubusercontent.com/unraid/apprise-go/${latest_version}"
+          curl -fsSL "${notice_base_url}/LICENSE" -o /tmp/apprise-go-LICENSE
+          curl -fsSL "${notice_base_url}/NOTICE.md" -o /tmp/apprise-go-NOTICE.md
+          curl -fsSL "${notice_base_url}/assets/themes/default/apprise-info-256x256.png" -o /tmp/apprise.png
+          latest_license_md5="$(md5sum /tmp/apprise-go-LICENSE | awk '{print $1}')"
+          latest_notice_md5="$(md5sum /tmp/apprise-go-NOTICE.md | awk '{print $1}')"
+          latest_icon_md5="$(md5sum /tmp/apprise.png | awk '{print $1}')"
+
           {
             echo "changed=true"
             echo "latest_md5=$latest_md5"
+            echo "latest_license_md5=$latest_license_md5"
+            echo "latest_notice_md5=$latest_notice_md5"
+            echo "latest_icon_md5=$latest_icon_md5"
           } >> "$GITHUB_OUTPUT"
 
       - name: Update plugin metadata
@@ -56,7 +67,10 @@ jobs:
 
           python3 scripts/update_apprise_go.py \
             --latest-version '${{ steps.latest.outputs.latest_version }}' \
-            --latest-md5 '${{ steps.latest.outputs.latest_md5 }}'
+            --latest-md5 '${{ steps.latest.outputs.latest_md5 }}' \
+            --latest-license-md5 '${{ steps.latest.outputs.latest_license_md5 }}' \
+            --latest-notice-md5 '${{ steps.latest.outputs.latest_notice_md5 }}' \
+            --latest-icon-md5 '${{ steps.latest.outputs.latest_icon_md5 }}'
 
       - name: Validate updated plugin metadata
         if: steps.latest.outputs.changed == 'true'
@@ -74,6 +88,27 @@ jobs:
           actual="$(md5sum /tmp/apprise-go-linux-amd64 | awk '{print $1}')"
           if [[ "$expected" != "$actual" ]]; then
             echo "apprise-go MD5 mismatch: PLG has $expected, actual is $actual" >&2
+            exit 1
+          fi
+
+          expected_license="$(sed -n 's/^<!ENTITY appriseLicenseMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_license="$(md5sum /tmp/apprise-go-LICENSE | awk '{print $1}')"
+          if [[ "$expected_license" != "$actual_license" ]]; then
+            echo "apprise-go LICENSE MD5 mismatch: PLG has $expected_license, actual is $actual_license" >&2
+            exit 1
+          fi
+
+          expected_notice="$(sed -n 's/^<!ENTITY appriseNoticeMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_notice="$(md5sum /tmp/apprise-go-NOTICE.md | awk '{print $1}')"
+          if [[ "$expected_notice" != "$actual_notice" ]]; then
+            echo "apprise-go NOTICE MD5 mismatch: PLG has $expected_notice, actual is $actual_notice" >&2
+            exit 1
+          fi
+
+          expected_icon="$(sed -n 's/^<!ENTITY iconMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_icon="$(md5sum /tmp/apprise.png | awk '{print $1}')"
+          if [[ "$expected_icon" != "$actual_icon" ]]; then
+            echo "apprise-go icon MD5 mismatch: PLG has $expected_icon, actual is $actual_icon" >&2
             exit 1
           fi
 

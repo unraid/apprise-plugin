@@ -85,7 +85,26 @@ jobs:
             exit 1
           fi
 
+          apprise_notice_base_url="https://raw.githubusercontent.com/unraid/apprise-go/${apprise_version}"
+          apprise_license_md5="$(sed -n 's/^<!ENTITY appriseLicenseMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          curl -fsSL "${apprise_notice_base_url}/LICENSE" -o /tmp/apprise-go-LICENSE
+          actual_apprise_license_md5="$(md5sum /tmp/apprise-go-LICENSE | awk '{print $1}')"
+          if [[ "$apprise_license_md5" != "$actual_apprise_license_md5" ]]; then
+            echo "apprise-go LICENSE MD5 mismatch: PLG has $apprise_license_md5, actual is $actual_apprise_license_md5" >&2
+            exit 1
+          fi
+
+          apprise_notice_md5="$(sed -n 's/^<!ENTITY appriseNoticeMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          curl -fsSL "${apprise_notice_base_url}/NOTICE.md" -o /tmp/apprise-go-NOTICE.md
+          actual_apprise_notice_md5="$(md5sum /tmp/apprise-go-NOTICE.md | awk '{print $1}')"
+          if [[ "$apprise_notice_md5" != "$actual_apprise_notice_md5" ]]; then
+            echo "apprise-go NOTICE MD5 mismatch: PLG has $apprise_notice_md5, actual is $actual_apprise_notice_md5" >&2
+            exit 1
+          fi
+
           icon_url="$(sed -n 's/^<!ENTITY iconURL[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          icon_url="${icon_url//&appriseRepoURL;/https://raw.githubusercontent.com/unraid/apprise-go/${apprise_version}}"
+          icon_url="${icon_url//&appriseVersion;/$apprise_version}"
           icon_md5="$(sed -n 's/^<!ENTITY iconMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
           curl -fsSL "$icon_url" -o /tmp/apprise.png
           actual_icon_md5="$(md5sum /tmp/apprise.png | awk '{print $1}')"
