@@ -35,21 +35,24 @@ This plugin is licensed under the BSD 2-Clause License. See `LICENSE`.
 
 Releases use two versions:
 
-- `VERSION` is the internal SemVer version managed by Knope and used for
-  GitHub release tags such as `v0.1.0`.
+- `.release-please-manifest.json` is the internal SemVer source of truth used
+  by release-please for GitHub release tags such as `v0.1.0`.
+- `VERSION` mirrors that internal SemVer version for local tooling and plugin
+  release metadata.
 - The PLG `version` entity is the Unraid plugin manager build version. Release
   prep writes it as `YYYY.MM.DD.HHMM.BUILD-INTERNAL_VERSION`, matching the
   build-number style used by other Unraid plugins.
 
-Use `knope document-change` to add release notes for user-facing changes. Use
-`knope release` to prepare the release commit, update `CHANGELOG.md`, update
-the PLG release metadata, create Knope's package tag plus a `vX.Y.Z` release
-tag, and push the commit and tags. The `vX.Y.Z` tag push validates the plugin
-metadata and creates or updates the GitHub release.
+Release PRs are created by the `Release Please` GitHub workflow from
+Conventional Commit messages merged to `main`. The release PR updates
+`CHANGELOG.md` and `.release-please-manifest.json`; the workflow then updates
+`VERSION` and PLG release metadata on that same PR. Merging the release PR lets
+release-please create the `vX.Y.Z` tag and GitHub Release, then validates the
+tagged plugin metadata.
 
 The `Update apprise-go` workflow checks for new
 [`unraid/apprise-go`](https://github.com/unraid/apprise-go) releases every six
 hours. When a newer release exists, it updates the bundled binary version and
-MD5, creates a Knope patch changeset, and opens a pull request. Merging that
-update does not create a release by itself; the next Knope release consumes the
-changeset and publishes the versioned plugin release.
+MD5 and opens a `fix:` pull request. Merging that update does not create a
+release by itself; the next release-please run creates or updates the release
+PR that publishes the versioned plugin release.

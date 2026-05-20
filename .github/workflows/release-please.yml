@@ -1,0 +1,80 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      pr: ${{ steps.release.outputs.pr || '' }}
+      release_created: ${{ steps.release.outputs.release_created || 'false' }}
+      tag_name: ${{ steps.release.outputs.tag_name || '' }}
+    steps:
+      - id: release
+        name: Release Please
+        uses: googleapis/release-please-action@8b8fd2cc23b2e18957157a9d923d75aa0c6f6ad5
+        with:
+          token: ${{ secrets.UNRAID_BOT_GITHUB_ADMIN_TOKEN || github.token }}
+
+  prepare-plugin-release-pr:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.pr != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release PR
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
+          token: ${{ secrets.UNRAID_BOT_GITHUB_ADMIN_TOKEN || github.token }}
+          fetch-depth: 0
+
+      - name: Prepare plugin release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path(".release-please-manifest.json").read_text())["."])
+          PY
+          )"
+
+          printf '%s\n' "$version" > VERSION
+          python3 scripts/prepare_plugin_release.py --internal-version "$version"
+
+      - name: Commit plugin release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "Plugin release metadata is already current"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERSION plugins/apprise.plg
+          git commit -m "chore(release): prepare plugin metadata"
+          git push origin HEAD:${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
+
+  validate-plugin-release:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
