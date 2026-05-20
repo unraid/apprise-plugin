@@ -52,8 +52,12 @@ jobs:
           fi
 
           plg_version="$(sed -n 's/^<!ENTITY version[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
-          if [[ ! "$plg_version" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.[0-9]+-${internal_version}$ ]]; then
+          if [[ ! "$plg_version" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{4}\.[0-9]+- ]]; then
             echo "PLG version must use external build format YYYY.MM.DD.HHMM.BUILD-${internal_version}: $plg_version" >&2
+            exit 1
+          fi
+          if [[ "${plg_version#*-}" != "$internal_version" ]]; then
+            echo "PLG version must end with exact internal version ${internal_version}: $plg_version" >&2
             exit 1
           fi
 

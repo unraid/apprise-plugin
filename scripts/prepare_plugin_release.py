@@ -35,7 +35,7 @@ def entity(text: str, name: str) -> str:
 
 
 def external_version(internal_version: str, build_number: str, date: str | None) -> str:
-    build_date = date or dt.datetime.now(dt.UTC).strftime("%Y.%m.%d.%H%M")
+    build_date = date or dt.datetime.now(dt.timezone.utc).strftime("%Y.%m.%d.%H%M")
     if not re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d{4}", build_date):
         raise SystemExit(f"Build date must use YYYY.MM.DD.HHMM format: {build_date}")
     if not re.fullmatch(r"\d+", build_number):
