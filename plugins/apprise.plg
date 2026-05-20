@@ -4,7 +4,7 @@
 <!ENTITY author         "Lime Technology">
 <!ENTITY version        "2026.05.20">
 <!ENTITY pluginVersion  "0.0.0">
-<!ENTITY releaseTag     "v2026.05.19c">
+<!ENTITY releaseTag     "main">
 <!ENTITY appriseVersion "v0.2.4">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
