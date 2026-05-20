@@ -1,4 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
+<!-- SPDX-License-Identifier: BSD-2-Clause -->
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
@@ -8,15 +9,20 @@
 <!ENTITY appriseVersion "v0.2.4">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
+<!ENTITY appriseRepoURL "https://raw.githubusercontent.com/unraid/apprise-go/&appriseVersion;">
 <!ENTITY pluginURL      "&gitURL;/plugins/&name;.plg">
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
 <!ENTITY appriseMD5     "9ffccd3d6e38a50be385e1bb8b0b02af">
+<!ENTITY appriseLicenseURL "&appriseRepoURL;/LICENSE">
+<!ENTITY appriseLicenseMD5 "74aac17862618045268cd493914a5b51">
+<!ENTITY appriseNoticeURL "&appriseRepoURL;/NOTICE.md">
+<!ENTITY appriseNoticeMD5 "ba1359e6fffe35fefa8fdca29712e13c">
 <!ENTITY agentURL       "&releaseURL;/agents/Apprise.xml">
 <!ENTITY agentMD5       "61bde88354583963e8a83bd9616bda62">
-<!ENTITY iconURL        "https://raw.githubusercontent.com/unraid/apprise-go/main/assets/themes/default/apprise-info-256x256.png">
+<!ENTITY iconURL        "&appriseRepoURL;/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 <!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
-<!ENTITY readmeMD5      "dbc1e4b3258cf315b279ad18b0e2c77e">
+<!ENTITY readmeMD5      "82a8d730cac9c5d5577ed0574aa89d53">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -30,6 +36,7 @@
 ##&name;
 ###&version;
 - Update apprise-go to &appriseVersion;.
+- Install upstream third-party notices for the apprise-go binary and icon assets.
 
 ###2026.05.19c
 - Add Apprise documentation links to URL help text.
@@ -85,6 +92,17 @@ mkdir -p /usr/local/emhttp/plugins/&name;
 <FILE Name="/usr/local/emhttp/plugins/&name;/README.md">
 <URL>"&readmeURL;"</URL>
 <MD5>&readmeMD5;</MD5>
+</FILE>
+
+<!-- Add upstream license and third-party notices for distributed assets and binaries. -->
+<FILE Name="/usr/local/emhttp/plugins/&name;/LICENSE.apprise-go">
+<URL>"&appriseLicenseURL;"</URL>
+<MD5>&appriseLicenseMD5;</MD5>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/&name;/NOTICE.apprise-go.md">
+<URL>"&appriseNoticeURL;"</URL>
+<MD5>&appriseNoticeMD5;</MD5>
 </FILE>
 
 <!-- Install the binary into the runtime filesystem. -->
