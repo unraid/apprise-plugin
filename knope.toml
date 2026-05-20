@@ -1,4 +1,4 @@
-[packages."unraid-apprise-plugin"]
+[package]
 changelog = "CHANGELOG.md"
 versioned_files = [
   { path = "VERSION", regex = "(?m)^(?<version>[^\\n]+)$" },
@@ -6,7 +6,11 @@ versioned_files = [
 ]
 
 [[workflows]]
-name = "release"
+name = "prepare-release"
+
+[[workflows.steps]]
+type = "Command"
+command = "git switch -C knope/release"
 
 [[workflows.steps]]
 type = "PrepareRelease"
@@ -17,25 +21,38 @@ command = "python3 scripts/prepare_plugin_release.py --internal-version \"$(cat 
 
 [[workflows.steps]]
 type = "Command"
+command = "git add plugins/apprise.plg"
+
+[[workflows.steps]]
+type = "Command"
 command = 'git commit -m "chore: prepare release $(cat VERSION)"'
 
 [[workflows.steps]]
+type = "Command"
+command = "git push --force --set-upstream origin knope/release"
+
+[[workflows.steps]]
+type = "CreatePullRequest"
+base = "main"
+
+[workflows.steps.title]
+template = "chore: prepare release $version"
+
+[workflows.steps.body]
+template = "This PR was created by Knope. Merging it will publish the release.\n\n$changelog"
+
+[[workflows]]
+name = "release"
+
+[[workflows.steps]]
 type = "Release"
-
-[[workflows.steps]]
-type = "Command"
-command = 'git tag "v$(cat VERSION)"'
-
-[[workflows.steps]]
-type = "Command"
-command = "git push"
-
-[[workflows.steps]]
-type = "Command"
-command = "git push --tags"
 
 [[workflows]]
 name = "document-change"
 
 [[workflows.steps]]
 type = "CreateChangeFile"
+
+[github]
+owner = "unraid"
+repo = "apprise-plugin"

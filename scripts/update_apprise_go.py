@@ -27,7 +27,7 @@ def write_changeset(latest_version: str) -> None:
         "\n".join(
             [
                 "---",
-                '"unraid-apprise-plugin": patch',
+                'default: patch',
                 "---",
                 "",
                 f"# Update apprise-go to {latest_version}",

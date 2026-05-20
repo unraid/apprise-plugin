@@ -1,0 +1,41 @@
+name: Publish Release Tag
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-release-tag:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.head_ref == 'knope/release' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+
+      - name: Push release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="$(cat VERSION)"
+          tag="v${version}"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "Release tag ${tag} already exists"
+            exit 0
+          fi
+
+          git tag "${tag}"
+          git push origin "${tag}"
