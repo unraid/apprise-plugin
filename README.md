@@ -9,7 +9,7 @@ CLI at `/usr/bin/apprise`.
 Install the plugin from Community Applications, or install it manually with:
 
 ```sh
-https://raw.githubusercontent.com/unraid/apprise-plugin/main/plugins/apprise.plg
+https://github.com/unraid/apprise-plugin/releases/latest/download/apprise.plg
 ```
 
 After install:
@@ -48,7 +48,8 @@ Conventional Commit messages merged to `main`. The release PR updates
 `CHANGELOG.md` and `.release-please-manifest.json`; the workflow then updates
 `VERSION` and PLG release metadata on that same PR. Merging the release PR lets
 release-please create the `vX.Y.Z` tag and GitHub Release, then validates the
-tagged plugin metadata.
+tagged plugin metadata and uploads the tagged `plugins/apprise.plg` file as the
+`apprise.plg` release asset.
 
 The `Update apprise-go` workflow checks for new
 [`unraid/apprise-go`](https://github.com/unraid/apprise-go) releases every six
