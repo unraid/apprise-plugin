@@ -1,4 +1,10 @@
 # Changelog
+## 0.0.2 (2026-05-20)
+
+### Fixes
+
+- create GitHub release in publish workflow (#7)
+
 ## 0.0.1 (2026-05-20)
 
 ### Features

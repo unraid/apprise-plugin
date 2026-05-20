@@ -3,9 +3,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.05.20.1337.5-0.0.1">
-<!ENTITY pluginVersion  "0.0.1">
-<!ENTITY releaseTag     "v0.0.1">
+<!ENTITY version        "2026.05.20.1447.7-0.0.2">
+<!ENTITY pluginVersion  "0.0.2">
+<!ENTITY releaseTag     "v0.0.2">
 <!ENTITY appriseVersion "v0.2.4">
 <!ENTITY gitURL         "https://raw.githubusercontent.com/unraid/apprise-plugin/main">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
@@ -35,6 +35,11 @@
 <CHANGES>
 ##&name;
 ###&version; (&pluginVersion;)
+### Fixes
+
+- create GitHub release in publish workflow (#7)
+
+###2026.05.20.1337.5-0.0.1 (0.0.2)
 ### Features
 
 - Update apprise-go to v0.2.4 (#2)
