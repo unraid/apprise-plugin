@@ -17,7 +17,7 @@ type = "PrepareRelease"
 
 [[workflows.steps]]
 type = "Command"
-command = "python3 scripts/prepare_plugin_release.py --internal-version \"$(cat VERSION)\""
+command = "python3 scripts/prepare_plugin_release.py --internal-version $version"
 
 [[workflows.steps]]
 type = "Command"
@@ -25,7 +25,7 @@ command = "git add plugins/apprise.plg"
 
 [[workflows.steps]]
 type = "Command"
-command = 'git commit -m "chore: prepare release $(cat VERSION)"'
+command = 'git commit -m "chore: prepare release $version"'
 
 [[workflows.steps]]
 type = "Command"
