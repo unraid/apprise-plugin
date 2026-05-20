@@ -37,4 +37,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: knope prepare-release --verbose
-        continue-on-error: true
