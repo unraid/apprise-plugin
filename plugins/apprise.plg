@@ -17,11 +17,11 @@
 <!ENTITY appriseNoticeURL "&appriseRepoURL;/NOTICE.md">
 <!ENTITY appriseNoticeMD5 "ba1359e6fffe35fefa8fdca29712e13c">
 <!ENTITY agentURL       "&releaseURL;/agents/Apprise.xml">
-<!ENTITY agentMD5       "61bde88354583963e8a83bd9616bda62">
+<!ENTITY agentMD5       "368f8f87626a612b01e624628adf60fb">
 <!ENTITY iconURL        "&appriseRepoURL;/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 <!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
-<!ENTITY readmeMD5      "82a8d730cac9c5d5577ed0574aa89d53">
+<!ENTITY readmeMD5      "20b2ad005247c5c0680425e0b6c6027f">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -32,7 +32,7 @@
         icon="bell">
 
 <CHANGES>
-##&name;
+## Apprise Notification Agent
 ###&version; (&pluginVersion;)
 ### Bug Fixes
 
@@ -47,7 +47,7 @@
 ### Initial Release
 
 - Install apprise-go &appriseVersion; as /usr/bin/apprise.
-- Add the Apprise notification agent under Settings > Notifications > Notification Agents.
+- Add the Apprise Notification Agent under Settings > Notifications > Notification Agents.
 - Cache the apprise-go release binary on the flash device so it is restored across reboots.
 - Install upstream apprise-go license and notice files for the bundled binary and icon assets.
 - License the plugin source under the BSD 2-Clause License.
@@ -73,7 +73,7 @@ mkdir -p /usr/local/emhttp/plugins/&name;
 <MD5>&iconMD5;</MD5>
 </FILE>
 
-<!-- Add the Apprise notification agent definition to Dynamix. -->
+<!-- Add the Apprise Notification Agent definition to Dynamix. -->
 <FILE Name="/usr/local/emhttp/plugins/dynamix/agents/Apprise.xml">
 <URL>"&agentURL;"</URL>
 <MD5>&agentMD5;</MD5>

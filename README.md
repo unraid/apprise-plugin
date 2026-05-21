@@ -1,8 +1,9 @@
-# Apprise for Unraid
+# Apprise Notification Agent for Unraid
 
 This repository provides the Unraid plugin wrapper for
 [apprise-go](https://github.com/unraid/apprise-go), installing the `apprise`
-CLI at `/usr/bin/apprise`.
+CLI at `/usr/bin/apprise` and adding the Apprise Notification Agent to the
+Unraid WebGUI.
 
 ## Install
 
@@ -22,8 +23,8 @@ apprise --help
 
 - The plugin caches the release binary on the flash device under
   `/boot/config/plugins/apprise` so it is restored across reboots.
-- The plugin adds an `Apprise` target under **Settings > Notifications >
-  Notification Agents**.
+- The plugin adds an `Apprise Notification Agent` target under **Settings >
+  Notifications > Notification Agents**.
 - Third-party license notices are installed with the plugin from the matching
   upstream `apprise-go` release under `/usr/local/emhttp/plugins/apprise`.
 
