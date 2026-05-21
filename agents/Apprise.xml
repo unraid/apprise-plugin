@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
   <Agent>
-    <Name>Apprise</Name>
+    <Name>Apprise Notification Agent</Name>
     <Variables>
       <Variable Help="One or more Apprise URLs or tagged entries. Separate multiple entries with semicolons. Example: tag1=tgram://BOT_TOKEN/CHAT_ID; tag2=discord://WEBHOOK_ID/WEBHOOK_TOKEN[br][br]See Apprise [a href='https://appriseit.com/services/' target='_blank'][u]Supported Services[/u][/a] for available targets and the [a href='https://appriseit.com/url-builder/' target='_blank'][u]URL Builder[/u][/a] for help creating URLs." Desc="Apprise URL(s)" Default="">APPRISE_URLS</Variable>
       <Variable Help="Optional filter for tagged Apprise entries. Use 'none' to send to every configured entry. Example: tag1 or tag1,tag2" Desc="Tag Filter" Default="none">TAGS</Variable>
