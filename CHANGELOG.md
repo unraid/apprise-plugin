@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/unraid/apprise-plugin/compare/v0.1.3...v0.1.4) (2026-05-21)
+
+
+### Bug Fixes
+
+* update apprise-go to v0.2.5 ([#18](https://github.com/unraid/apprise-plugin/issues/18)) ([6756581](https://github.com/unraid/apprise-plugin/commit/6756581b3c43cf194e458f66ac7df4b2fd0c9b49))
+
 ## [0.1.3](https://github.com/unraid/apprise-plugin/compare/v0.1.2...v0.1.3) (2026-05-20)
 
 
