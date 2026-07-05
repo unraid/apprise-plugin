@@ -27,7 +27,7 @@
         author="&author;"
         version="&version;"
         pluginURL="&pluginURL;"
-        min="6.12.0"
+        min="7.0.0"
         support="https://github.com/unraid/apprise-plugin/issues"
         icon="bell">
 
