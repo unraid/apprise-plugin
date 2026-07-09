@@ -3,9 +3,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.05.21.1409.10-0.1.4">
-<!ENTITY pluginVersion  "0.1.4">
-<!ENTITY releaseTag     "v0.1.4">
+<!ENTITY version        "2026.07.09.0058.19-0.1.5">
+<!ENTITY pluginVersion  "0.1.5">
+<!ENTITY releaseTag     "v0.1.5">
 <!ENTITY appriseVersion "v0.2.8">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
 <!ENTITY appriseRepoURL "https://raw.githubusercontent.com/unraid/apprise-go/&appriseVersion;">
@@ -33,8 +33,16 @@
         icon="bell">
 
 <CHANGES>
-## Apprise Notification Agent
+##&name;
 ###&version; (&pluginVersion;)
+### Bug Fixes
+
+* Minimum OS version ([#23](https://github.com/unraid/apprise-plugin/issues/23)) ([82ced52](https://github.com/unraid/apprise-plugin/commit/82ced52d7e63b840b871c2438e41e1ff2845949b))
+* repair plugin launch attribute XML ([#27](https://github.com/unraid/apprise-plugin/issues/27)) ([7fef419](https://github.com/unraid/apprise-plugin/commit/7fef4190a5dd832162674285afc681a894229d6f))
+* update apprise-go to v0.2.7 ([#24](https://github.com/unraid/apprise-plugin/issues/24)) ([17a5855](https://github.com/unraid/apprise-plugin/commit/17a5855f29c42308b918bac92a41b94c8426b7d3))
+* update apprise-go to v0.2.8 ([#28](https://github.com/unraid/apprise-plugin/issues/28)) ([d86357f](https://github.com/unraid/apprise-plugin/commit/d86357f894decb8782c7572fceabeab072e15314))
+
+###2026.05.21.1409.10-0.1.4 (0.1.4)
 ### Bug Fixes
 
 * update apprise-go to v0.2.5 ([#18](https://github.com/unraid/apprise-plugin/issues/18)) ([6756581](https://github.com/unraid/apprise-plugin/commit/6756581b3c43cf194e458f66ac7df4b2fd0c9b49))

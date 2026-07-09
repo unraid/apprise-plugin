@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 import argparse
 import hashlib
+import json
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -89,22 +90,61 @@ def lint_local_md5(plg: Path, values: dict[str, str], agent: Path, readme: Path)
             raise SystemExit(f"{plg}: {entity_name} mismatch: PLG has {expected}, actual is {actual}")
 
 
+def lint_changelog_title(plg: Path) -> None:
+    text = plg.read_text()
+    match = re.search(r"<CHANGES>\s*(.*?)\s*</CHANGES>", text, flags=re.DOTALL)
+    if not match:
+        raise SystemExit(f"{plg}: missing CHANGES block")
+    if not match.group(1).startswith("##&name;"):
+        raise SystemExit(f"{plg}: PLG changelog must start with ##&name;")
+
+
+def lint_version_alignment(
+    plg: Path,
+    values: dict[str, str],
+    version_file: Path,
+    manifest: Path,
+) -> None:
+    plugin_version = values["pluginVersion"]
+    expected_tag = f"v{plugin_version}"
+    if values["releaseTag"] != expected_tag:
+        raise SystemExit(f"{plg}: releaseTag must be {expected_tag}, found {values['releaseTag']}")
+
+    if version_file.exists():
+        version = version_file.read_text().strip()
+        if version != plugin_version:
+            raise SystemExit(f"{version_file}: version {version} does not match PLG pluginVersion {plugin_version}")
+
+    if manifest.exists():
+        manifest_version = json.loads(manifest.read_text()).get(".")
+        if manifest_version and manifest_version != plugin_version:
+            raise SystemExit(
+                f"{manifest}: version {manifest_version} does not match PLG pluginVersion {plugin_version}"
+            )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Lint Unraid Apprise plugin metadata.")
     parser.add_argument("--plg", default="plugins/apprise.plg")
     parser.add_argument("--agent", default="agents/Apprise.xml")
     parser.add_argument("--readme", default="plugin/README.md")
+    parser.add_argument("--version-file", default="VERSION")
+    parser.add_argument("--manifest", default=".release-please-manifest.json")
     args = parser.parse_args()
 
     plg = Path(args.plg)
     agent = Path(args.agent)
     readme = Path(args.readme)
+    version_file = Path(args.version_file)
+    manifest = Path(args.manifest)
 
     plg_tree = parse_xml(plg)
     parse_xml(agent)
     values = entities(plg)
     lint_plugin_root(plg, plg_tree)
     lint_local_md5(plg, values, agent, readme)
+    lint_changelog_title(plg)
+    lint_version_alignment(plg, values, version_file, manifest)
 
     print(f"{plg}: ok")
     print(f"{agent}: ok")
