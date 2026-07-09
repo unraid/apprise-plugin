@@ -3,9 +3,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.07.09.0058.19-0.1.5">
-<!ENTITY pluginVersion  "0.1.5">
-<!ENTITY releaseTag     "v0.1.5">
+<!ENTITY version        "2026.07.09.1355.23-0.2.0">
+<!ENTITY pluginVersion  "0.2.0">
+<!ENTITY releaseTag     "v0.2.0">
 <!ENTITY appriseVersion "v0.2.8">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
 <!ENTITY appriseRepoURL "https://raw.githubusercontent.com/unraid/apprise-go/&appriseVersion;">
@@ -39,6 +39,17 @@
 <CHANGES>
 ##&name;
 ###&version; (&pluginVersion;)
+### Features
+
+* **relay:** add container notification relay ([#31](https://github.com/unraid/apprise-plugin/issues/31)) ([7264437](https://github.com/unraid/apprise-plugin/commit/72644370faff5abf4cc57fc494037b68a22d84e0))
+
+
+### Bug Fixes
+
+* **agent:** clarify Apprise entry filter ([#33](https://github.com/unraid/apprise-plugin/issues/33)) ([d4173d3](https://github.com/unraid/apprise-plugin/commit/d4173d3ace1f0c39e49d2ded9f72ca8b0ab44d7f))
+* **release:** accept literal PLG changelog titles ([#34](https://github.com/unraid/apprise-plugin/issues/34)) ([d38f100](https://github.com/unraid/apprise-plugin/commit/d38f1009ae7374341512d377c19a7cf7eb7dd0a1))
+
+###2026.07.09.0058.19-0.1.5 (0.1.5)
 ### Bug Fixes
 
 * Minimum OS version ([#23](https://github.com/unraid/apprise-plugin/issues/23)) ([82ced52](https://github.com/unraid/apprise-plugin/commit/82ced52d7e63b840b871c2438e41e1ff2845949b))
