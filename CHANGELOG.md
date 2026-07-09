@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.5](https://github.com/unraid/apprise-plugin/compare/v0.1.4...v0.1.5) (2026-07-09)
+
+
+### Bug Fixes
+
+* Minimum OS version ([#23](https://github.com/unraid/apprise-plugin/issues/23)) ([82ced52](https://github.com/unraid/apprise-plugin/commit/82ced52d7e63b840b871c2438e41e1ff2845949b))
+* repair plugin launch attribute XML ([#27](https://github.com/unraid/apprise-plugin/issues/27)) ([7fef419](https://github.com/unraid/apprise-plugin/commit/7fef4190a5dd832162674285afc681a894229d6f))
+* update apprise-go to v0.2.7 ([#24](https://github.com/unraid/apprise-plugin/issues/24)) ([17a5855](https://github.com/unraid/apprise-plugin/commit/17a5855f29c42308b918bac92a41b94c8426b7d3))
+* update apprise-go to v0.2.8 ([#28](https://github.com/unraid/apprise-plugin/issues/28)) ([d86357f](https://github.com/unraid/apprise-plugin/commit/d86357f894decb8782c7572fceabeab072e15314))
+
 ## [0.1.4](https://github.com/unraid/apprise-plugin/compare/v0.1.3...v0.1.4) (2026-05-21)
 
 
