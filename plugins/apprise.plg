@@ -29,7 +29,7 @@
         pluginURL="&pluginURL;"
         min="7.0.0"
         support="https://github.com/unraid/apprise-plugin/issues"
-        launch="/Notifications
+        launch="/Notifications"
         icon="bell">
 
 <CHANGES>
