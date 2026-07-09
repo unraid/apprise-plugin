@@ -79,9 +79,10 @@ def update_plugin_changelog(
         raise SystemExit("Unable to find PLG CHANGES block")
 
     body = plg_text[start + len(start_marker) : end].strip()
-    title = "##&name;"
-    if not body.startswith(title):
+    title_match = re.match(r"^##(?!#)[^\n]*", body)
+    if not title_match:
         raise SystemExit("Unable to find PLG changelog title")
+    title = title_match.group(0)
 
     history = ""
     existing_entries = body[len(title) :].strip()
