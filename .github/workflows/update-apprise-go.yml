@@ -78,11 +78,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          python3 - <<'PY'
-          import xml.etree.ElementTree as ET
-          for path in ("plugins/apprise.plg", "agents/Apprise.xml"):
-              ET.parse(path)
-          PY
+          python3 scripts/lint_plugin_metadata.py
 
           expected="$(sed -n 's/^<!ENTITY appriseMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
           actual="$(md5sum /tmp/apprise-go-linux-amd64 | awk '{print $1}')"
