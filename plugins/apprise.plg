@@ -17,11 +17,15 @@
 <!ENTITY appriseNoticeURL "&appriseRepoURL;/NOTICE.md">
 <!ENTITY appriseNoticeMD5 "ba1359e6fffe35fefa8fdca29712e13c">
 <!ENTITY agentURL       "&releaseURL;/agents/Apprise.xml">
-<!ENTITY agentMD5       "368f8f87626a612b01e624628adf60fb">
+<!ENTITY agentMD5       "26d72fbf1981d9e0f1f3936986386ac0">
 <!ENTITY iconURL        "&appriseRepoURL;/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 <!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
-<!ENTITY readmeMD5      "20b2ad005247c5c0680425e0b6c6027f">
+<!ENTITY readmeMD5      "ab57add64611651708f3910493ab2366">
+<!ENTITY relaydURL      "&releaseURL;/relay/apprise-relayd.php">
+<!ENTITY relaydMD5      "c1037721643eb40c42969c1876ed6f90">
+<!ENTITY relayControlURL "&releaseURL;/relay/rc.apprise-relayd.sh">
+<!ENTITY relayControlMD5 "0541612a0defa06868125acd9d2cf460">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -67,6 +71,7 @@
 <INLINE>
 mkdir -p /boot/config/plugins/&name;
 mkdir -p /usr/local/emhttp/plugins/&name;
+mkdir -p /usr/local/emhttp/plugins/&name;/scripts;
 </INLINE>
 </FILE>
 
@@ -94,6 +99,17 @@ mkdir -p /usr/local/emhttp/plugins/&name;
 <MD5>&readmeMD5;</MD5>
 </FILE>
 
+<!-- Add the host-side container notification relay. -->
+<FILE Name="/usr/local/emhttp/plugins/&name;/scripts/apprise-relayd.php">
+<URL>"&relaydURL;"</URL>
+<MD5>&relaydMD5;</MD5>
+</FILE>
+
+<FILE Name="/usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh">
+<URL>"&relayControlURL;"</URL>
+<MD5>&relayControlMD5;</MD5>
+</FILE>
+
 <!-- Add upstream license and third-party notices for distributed assets and binaries. -->
 <FILE Name="/usr/local/emhttp/plugins/&name;/LICENSE.apprise-go">
 <URL>"&appriseLicenseURL;"</URL>
@@ -110,6 +126,10 @@ mkdir -p /usr/local/emhttp/plugins/&name;
 <INLINE>
 install -m 0755 /boot/config/plugins/&name;/apprise-go-linux-amd64-&appriseVersion; /usr/bin/apprise
 install -m 0644 /boot/config/plugins/&name;/apprise.png /usr/local/emhttp/plugins/dynamix/icons/apprise.png
+chmod 0644 /usr/local/emhttp/plugins/&name;/scripts/apprise-relayd.php
+chmod 0755 /usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh
+ln -sf /usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh /etc/rc.d/rc.apprise-relayd
+/etc/rc.d/rc.apprise-relayd restart 2>/dev/null || true
 find /boot/config/plugins/&name; -type f -name 'apprise-go-linux-amd64-*' ! -name 'apprise-go-linux-amd64-&appriseVersion;' -delete 2>/dev/null
 
 echo ""
@@ -125,7 +145,10 @@ echo ""
 <!-- Remove the runtime binary and cached release asset. -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
+/etc/rc.d/rc.apprise-relayd stop 2>/dev/null || true
 rm -f /usr/bin/apprise
+rm -f /etc/rc.d/rc.apprise-relayd
+rm -rf /var/run/apprise
 rm -f /usr/local/emhttp/plugins/dynamix/agents/Apprise.xml
 rm -f /usr/local/emhttp/plugins/dynamix/icons/apprise.png
 rm -rf /usr/local/emhttp/plugins/&name;

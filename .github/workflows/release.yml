@@ -121,6 +121,20 @@ jobs:
             exit 1
           fi
 
+          relayd_md5="$(sed -n 's/^<!ENTITY relaydMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_relayd_md5="$(md5sum relay/apprise-relayd.php | awk '{print $1}')"
+          if [[ "$relayd_md5" != "$actual_relayd_md5" ]]; then
+            echo "Relay daemon MD5 mismatch: PLG has $relayd_md5, actual is $actual_relayd_md5" >&2
+            exit 1
+          fi
+
+          relay_control_md5="$(sed -n 's/^<!ENTITY relayControlMD5[[:space:]]*"\([^"]*\)">$/\1/p' plugins/apprise.plg)"
+          actual_relay_control_md5="$(md5sum relay/rc.apprise-relayd.sh | awk '{print $1}')"
+          if [[ "$relay_control_md5" != "$actual_relay_control_md5" ]]; then
+            echo "Relay control MD5 mismatch: PLG has $relay_control_md5, actual is $actual_relay_control_md5" >&2
+            exit 1
+          fi
+
           {
             echo "tag=$tag"
             echo "internal_version=$internal_version"

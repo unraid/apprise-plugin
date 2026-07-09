@@ -31,6 +31,10 @@ REQUIRED_ENTITIES = (
     "iconMD5",
     "readmeURL",
     "readmeMD5",
+    "relaydURL",
+    "relaydMD5",
+    "relayControlURL",
+    "relayControlMD5",
 )
 
 REQUIRED_PLUGIN_ATTRIBUTES = (
@@ -76,10 +80,19 @@ def lint_plugin_root(plg: Path, tree: ET.ElementTree) -> None:
         raise SystemExit(f"{plg}: missing required PLUGIN attributes: {', '.join(missing)}")
 
 
-def lint_local_md5(plg: Path, values: dict[str, str], agent: Path, readme: Path) -> None:
+def lint_local_md5(
+    plg: Path,
+    values: dict[str, str],
+    agent: Path,
+    readme: Path,
+    relayd: Path,
+    relay_control: Path,
+) -> None:
     checks = (
         ("agentMD5", agent),
         ("readmeMD5", readme),
+        ("relaydMD5", relayd),
+        ("relayControlMD5", relay_control),
     )
     for entity_name, path in checks:
         if not path.exists():
@@ -130,6 +143,8 @@ def main() -> int:
     parser.add_argument("--readme", default="plugin/README.md")
     parser.add_argument("--version-file", default="VERSION")
     parser.add_argument("--manifest", default=".release-please-manifest.json")
+    parser.add_argument("--relayd", default="relay/apprise-relayd.php")
+    parser.add_argument("--relay-control", default="relay/rc.apprise-relayd.sh")
     args = parser.parse_args()
 
     plg = Path(args.plg)
@@ -137,12 +152,14 @@ def main() -> int:
     readme = Path(args.readme)
     version_file = Path(args.version_file)
     manifest = Path(args.manifest)
+    relayd = Path(args.relayd)
+    relay_control = Path(args.relay_control)
 
     plg_tree = parse_xml(plg)
     parse_xml(agent)
     values = entities(plg)
     lint_plugin_root(plg, plg_tree)
-    lint_local_md5(plg, values, agent, readme)
+    lint_local_md5(plg, values, agent, readme, relayd, relay_control)
     lint_changelog_title(plg)
     lint_version_alignment(plg, values, version_file, manifest)
 
