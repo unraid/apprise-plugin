@@ -17,11 +17,11 @@
 <!ENTITY appriseNoticeURL "&appriseRepoURL;/NOTICE.md">
 <!ENTITY appriseNoticeMD5 "ba1359e6fffe35fefa8fdca29712e13c">
 <!ENTITY agentURL       "&releaseURL;/agents/Apprise.xml">
-<!ENTITY agentMD5       "26d72fbf1981d9e0f1f3936986386ac0">
+<!ENTITY agentMD5       "a15d0eae0d2b85bb4e82bed67edb80af">
 <!ENTITY iconURL        "&appriseRepoURL;/assets/themes/default/apprise-info-256x256.png">
 <!ENTITY iconMD5        "9012bfab804918f0d8daec76a3fc1eab">
 <!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
-<!ENTITY readmeMD5      "ab57add64611651708f3910493ab2366">
+<!ENTITY readmeMD5      "613d6fc28571c68781d7ba4e174b9514">
 <!ENTITY relaydURL      "&releaseURL;/relay/apprise-relayd.php">
 <!ENTITY relaydMD5      "c1037721643eb40c42969c1876ed6f90">
 <!ENTITY relayControlURL "&releaseURL;/relay/rc.apprise-relayd.sh">

@@ -4,6 +4,10 @@ Apprise Notification Agent installs the `apprise` command line tool and adds an 
 
 After installing, configure the notification target in **Settings > Notifications > Notification Agents > Apprise Notification Agent**. Enter one or more Apprise URLs, then use the built-in **Test** button to verify delivery.
 
+Leave **Send To** set to `all` for normal Apprise URLs, including URLs with
+their own `?tags=` query parameter. Only change it when **Apprise URL(s)**
+contains named entries such as `unraid=apprise://...`.
+
 Docker containers can also use the CLI by passing through the host binary as a
 read-only bind mount. Map `/usr/bin/apprise` on the Unraid host to
 `/usr/local/bin/apprise` in the container, then configure the container with its

@@ -25,6 +25,9 @@ apprise --help
   `/boot/config/plugins/apprise` so it is restored across reboots.
 - The plugin adds an `Apprise Notification Agent` target under **Settings >
   Notifications > Notification Agents**.
+- Leave **Send To** set to `all` for normal Apprise URLs, including URLs with
+  their own `?tags=` query parameter. Only change it when **Apprise URL(s)**
+  contains named entries such as `unraid=apprise://...`.
 - Third-party license notices are installed with the plugin from the matching
   upstream `apprise-go` release under `/usr/local/emhttp/plugins/apprise`.
 
