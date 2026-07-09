@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/unraid/apprise-plugin/compare/v0.1.5...v0.2.0) (2026-07-09)
+
+
+### Features
+
+* **relay:** add container notification relay ([#31](https://github.com/unraid/apprise-plugin/issues/31)) ([7264437](https://github.com/unraid/apprise-plugin/commit/72644370faff5abf4cc57fc494037b68a22d84e0))
+
+
+### Bug Fixes
+
+* **agent:** clarify Apprise entry filter ([#33](https://github.com/unraid/apprise-plugin/issues/33)) ([d4173d3](https://github.com/unraid/apprise-plugin/commit/d4173d3ace1f0c39e49d2ded9f72ca8b0ab44d7f))
+* **release:** accept literal PLG changelog titles ([#34](https://github.com/unraid/apprise-plugin/issues/34)) ([d38f100](https://github.com/unraid/apprise-plugin/commit/d38f1009ae7374341512d377c19a7cf7eb7dd0a1))
+
 ## [0.1.5](https://github.com/unraid/apprise-plugin/compare/v0.1.4...v0.1.5) (2026-07-09)
 
 
