@@ -19,3 +19,6 @@ jobs:
 
       - name: Lint plugin metadata
         run: python3 scripts/lint_plugin_metadata.py
+
+      - name: Run script tests
+        run: python3 -m unittest discover -s tests

@@ -136,7 +136,11 @@ mkdir -p /usr/local/emhttp/plugins/&name;/scripts;
 <FILE Run="/bin/bash" Method="install">
 <INLINE>
 install -m 0755 /boot/config/plugins/&name;/apprise-go-linux-amd64-&appriseVersion; /usr/bin/apprise
-install -m 0644 /boot/config/plugins/&name;/apprise.png /usr/local/emhttp/plugins/dynamix/icons/apprise.png
+# Dynamix derives the agent icon name from the agent XML Name: spaces become
+# underscores, underscores are stripped, and the result is lowercased.
+# "Apprise Notification Agent" therefore resolves to apprisenotificationagent.png.
+install -m 0644 /boot/config/plugins/&name;/apprise.png /usr/local/emhttp/plugins/dynamix/icons/apprisenotificationagent.png
+rm -f /usr/local/emhttp/plugins/dynamix/icons/apprise.png
 chmod 0644 /usr/local/emhttp/plugins/&name;/scripts/apprise-relayd.php
 chmod 0755 /usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh
 ln -sf /usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh /etc/rc.d/rc.apprise-relayd
@@ -161,8 +165,11 @@ rm -f /usr/bin/apprise
 rm -f /etc/rc.d/rc.apprise-relayd
 rm -rf /var/run/apprise
 rm -f /usr/local/emhttp/plugins/dynamix/agents/Apprise.xml
+rm -f /usr/local/emhttp/plugins/dynamix/icons/apprisenotificationagent.png
 rm -f /usr/local/emhttp/plugins/dynamix/icons/apprise.png
 rm -rf /usr/local/emhttp/plugins/&name;
+rm -f /boot/config/plugins/dynamix/notifications/agents/Apprise_Notification_Agent.sh
+rm -f /boot/config/plugins/dynamix/notifications/agents-disabled/Apprise_Notification_Agent.sh
 rm -f /boot/config/plugins/dynamix/notifications/agents/Apprise.sh
 rm -f /boot/config/plugins/dynamix/notifications/agents-disabled/Apprise.sh
 rm -rf /boot/config/plugins/&name;
