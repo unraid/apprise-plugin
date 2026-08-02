@@ -103,6 +103,42 @@ def lint_local_md5(
             raise SystemExit(f"{plg}: {entity_name} mismatch: PLG has {expected}, actual is {actual}")
 
 
+def agent_name(agent: Path, tree: ET.ElementTree) -> str:
+    name = (tree.getroot().findtext("Name") or "").strip()
+    if not name:
+        raise SystemExit(f"{agent}: missing agent Name")
+    return name
+
+
+def agent_icon_basename(name: str) -> str:
+    """Return the icon file Dynamix looks up for an agent Name.
+
+    NotificationAgents.page builds the path as
+    strtolower(str_replace('_', '', str_replace(' ', '_', $name))) . '.png'.
+    """
+    return f"{name.replace(' ', '_').replace('_', '').lower()}.png"
+
+
+def agent_script_basename(name: str) -> str:
+    """Return the agent script file Dynamix writes for an agent Name."""
+    return f"{name.replace(' ', '_')}.sh"
+
+
+def lint_agent_assets(plg: Path, agent: Path, tree: ET.ElementTree) -> None:
+    name = agent_name(agent, tree)
+    text = plg.read_text()
+
+    icon = f"/usr/local/emhttp/plugins/dynamix/icons/{agent_icon_basename(name)}"
+    if f" {icon}\n" not in text:
+        raise SystemExit(f"{plg}: agent '{name}' requires the icon to be installed as {icon}")
+
+    script = agent_script_basename(name)
+    for state in ("agents", "agents-disabled"):
+        path = f"/boot/config/plugins/dynamix/notifications/{state}/{script}"
+        if f"rm -f {path}\n" not in text:
+            raise SystemExit(f"{plg}: agent '{name}' requires the remove method to delete {path}")
+
+
 def lint_changelog_title(plg: Path) -> None:
     text = plg.read_text()
     match = re.search(r"<CHANGES>\s*(.*?)\s*</CHANGES>", text, flags=re.DOTALL)
@@ -156,10 +192,11 @@ def main() -> int:
     relay_control = Path(args.relay_control)
 
     plg_tree = parse_xml(plg)
-    parse_xml(agent)
+    agent_tree = parse_xml(agent)
     values = entities(plg)
     lint_plugin_root(plg, plg_tree)
     lint_local_md5(plg, values, agent, readme, relayd, relay_control)
+    lint_agent_assets(plg, agent, agent_tree)
     lint_changelog_title(plg)
     lint_version_alignment(plg, values, version_file, manifest)
 
