@@ -3,9 +3,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name           "apprise">
 <!ENTITY author         "Lime Technology">
-<!ENTITY version        "2026.07.09.1355.23-0.2.0">
-<!ENTITY pluginVersion  "0.2.0">
-<!ENTITY releaseTag     "v0.2.0">
+<!ENTITY version        "2026.08.13.1531.27-0.2.1">
+<!ENTITY pluginVersion  "0.2.1">
+<!ENTITY releaseTag     "v0.2.1">
 <!ENTITY appriseVersion "v0.3.1">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
 <!ENTITY appriseRepoURL "https://raw.githubusercontent.com/unraid/apprise-go/&appriseVersion;">
@@ -39,6 +39,13 @@
 <CHANGES>
 ##&name;
 ###&version; (&pluginVersion;)
+### Bug Fixes
+
+* **agent:** install icon under the name Dynamix looks up ([#36](https://github.com/unraid/apprise-plugin/issues/36)) ([d180efd](https://github.com/unraid/apprise-plugin/commit/d180efd8cd6dc49c65969b8f61ea2358da0de32d))
+* stop duplicate notifications and repair the container relay ([#38](https://github.com/unraid/apprise-plugin/issues/38)) ([652da6a](https://github.com/unraid/apprise-plugin/commit/652da6ae2fa9628a7368557a5c4d8190f3a83406))
+* update apprise-go to v0.3.1 ([#39](https://github.com/unraid/apprise-plugin/issues/39)) ([e7e6ab1](https://github.com/unraid/apprise-plugin/commit/e7e6ab138fb6fe36486236bbab0cbc851cbfc271))
+
+###2026.07.09.1355.23-0.2.0 (0.2.0)
 ### Features
 
 * **relay:** add container notification relay ([#31](https://github.com/unraid/apprise-plugin/issues/31)) ([7264437](https://github.com/unraid/apprise-plugin/commit/72644370faff5abf4cc57fc494037b68a22d84e0))
