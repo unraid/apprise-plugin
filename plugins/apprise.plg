@@ -23,7 +23,7 @@
 <!ENTITY readmeURL      "&releaseURL;/plugin/README.md">
 <!ENTITY readmeMD5      "613d6fc28571c68781d7ba4e174b9514">
 <!ENTITY relaydURL      "&releaseURL;/relay/apprise-relayd.php">
-<!ENTITY relaydMD5      "c1037721643eb40c42969c1876ed6f90">
+<!ENTITY relaydMD5      "34c35f6a7fb1920ed5a6bca591b32852">
 <!ENTITY relayControlURL "&releaseURL;/relay/rc.apprise-relayd.sh">
 <!ENTITY relayControlMD5 "0541612a0defa06868125acd9d2cf460">
 ]>
@@ -141,6 +141,54 @@ install -m 0755 /boot/config/plugins/&name;/apprise-go-linux-amd64-&appriseVersi
 # "Apprise Notification Agent" therefore resolves to apprisenotificationagent.png.
 install -m 0644 /boot/config/plugins/&name;/apprise.png /usr/local/emhttp/plugins/dynamix/icons/apprisenotificationagent.png
 rm -f /usr/local/emhttp/plugins/dynamix/icons/apprise.png
+
+# Remove the orphaned pre-rename agent script.
+#
+# Plugin 0.1.4 renamed the agent from "Apprise" to "Apprise Notification
+# Agent", which changed the script Dynamix generates from Apprise.sh to
+# Apprise_Notification_Agent.sh. The notify script executes every file in the
+# agents directory, while the WebGUI only manages the filename derived from the
+# current agent Name, so a leftover Apprise.sh keeps sending a second copy of
+# every notification and cannot be switched off from Settings.
+#
+# Guards, so this only ever removes a duplicate:
+#   - the renamed agent must exist (enabled or disabled), proving the agent is
+#     configured under the current name. A lone Apprise.sh is somebody's only
+#     sender and is left alone.
+#   - the file must match the generated-script signature, so a hand-written
+#     script that merely happens to sit at that path is left alone.
+# The file is moved aside rather than deleted, because it holds the Apprise URLs
+# the user entered.
+notify_dir="/boot/config/plugins/dynamix/notifications"
+orphan_backup_dir="/boot/config/plugins/&name;/removed-agents"
+
+if [ -f "$notify_dir/agents/Apprise_Notification_Agent.sh" ] || [ -f "$notify_dir/agents-disabled/Apprise_Notification_Agent.sh" ]; then
+  for state in agents agents-disabled; do
+    orphan="$notify_dir/$state/Apprise.sh"
+    [ -f "$orphan" ] || continue
+    grep -q '^APPRISE_URLS=' "$orphan" || continue
+    grep -qF 'mktemp /tmp/apprise-agent.' "$orphan" || continue
+    grep -qF 'apprise "${args[@]}"' "$orphan" || continue
+
+    mkdir -p "$orphan_backup_dir"
+    if cp -p "$orphan" "$orphan_backup_dir/Apprise.sh.$state"; then
+      chmod 0600 "$orphan_backup_dir/Apprise.sh.$state"
+      rm -f "$orphan"
+      echo " Removed orphaned pre-rename notification agent $orphan"
+      echo " It duplicated every notification. Saved to $orphan_backup_dir/Apprise.sh.$state"
+      # Removing an enabled orphan while the current agent is disabled leaves no
+      # Apprise sender at all. That is what Disabled is supposed to mean, but say
+      # so plainly so nobody is left wondering where their notifications went.
+      if [ "$state" = "agents" ]; then
+        if [ ! -f "$notify_dir/agents/Apprise_Notification_Agent.sh" ]; then
+          echo " NOTE: Apprise Notification Agent is currently disabled, so Apprise is no longer sending anything."
+          echo " Enable it under Settings, Notifications, Notification Agents to resume notifications."
+        fi
+      fi
+    fi
+  done
+fi
+
 chmod 0644 /usr/local/emhttp/plugins/&name;/scripts/apprise-relayd.php
 chmod 0755 /usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh
 ln -sf /usr/local/emhttp/plugins/&name;/scripts/rc.apprise-relayd.sh /etc/rc.d/rc.apprise-relayd
