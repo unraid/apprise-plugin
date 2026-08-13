@@ -2,12 +2,45 @@
 <?php
 // SPDX-License-Identifier: BSD-2-Clause
 
+const AGENT_DEFINITION = "/usr/local/emhttp/plugins/dynamix/agents/Apprise.xml";
+const AGENTS_DIR = "/boot/config/plugins/dynamix/notifications/agents";
+
 $socketPath = getenv("APPRISE_RELAY_SOCKET") ?: "/var/run/apprise/apprise.sock";
 $pidFile = getenv("APPRISE_RELAY_PID") ?: "/var/run/apprise/apprise-relayd.pid";
-$agentScript = getenv("APPRISE_RELAY_AGENT") ?: "/boot/config/plugins/dynamix/notifications/agents/Apprise.sh";
 $requestTimeout = (int) (getenv("APPRISE_RELAY_TIMEOUT") ?: "30");
 $maxBodyBytes = 16384;
 $running = true;
+
+/**
+ * Resolve the agent script Dynamix generates for our agent definition.
+ *
+ * Dynamix names the script after the agent XML Name with spaces replaced by
+ * underscores (NotificationAgents.page), so the filename changes whenever the
+ * Name changes. Deriving it from the installed XML keeps the relay working
+ * across renames instead of hardcoding a name that a rename silently breaks.
+ *
+ * Returns null when the definition cannot be read, so callers can fail loudly
+ * rather than guess a filename.
+ */
+function agent_script_path(): ?string
+{
+    $override = trim(getenv("APPRISE_RELAY_AGENT") ?: "");
+    if ($override !== "") {
+        return $override;
+    }
+
+    $xml = @simplexml_load_file(AGENT_DEFINITION);
+    if ($xml === false || !isset($xml->Name)) {
+        return null;
+    }
+
+    $name = str_replace(" ", "_", trim((string) $xml->Name));
+    if ($name === "" || strpbrk($name, "/\\") !== false) {
+        return null;
+    }
+
+    return AGENTS_DIR . "/" . $name . ".sh";
+}
 
 function relay_log(string $message, int $priority = LOG_INFO): void
 {
@@ -156,8 +189,11 @@ function request_payload(array $request): array
     return $payload;
 }
 
-function run_agent(string $agentScript, array $payload, int $timeout): array
+function run_agent(?string $agentScript, array $payload, int $timeout): array
 {
+    if ($agentScript === null) {
+        return [503, ["ok" => false, "error" => "Apprise notification agent definition not found; is the Apprise plugin installed?"]];
+    }
     if (!is_file($agentScript)) {
         return [503, ["ok" => false, "error" => "Apprise notification agent is not configured or is disabled"]];
     }
@@ -250,7 +286,7 @@ function run_agent(string $agentScript, array $payload, int $timeout): array
     return [202, ["ok" => true]];
 }
 
-function handle_connection($conn, string $agentScript, int $timeout, int $maxBodyBytes): void
+function handle_connection($conn, ?string $agentScript, int $timeout, int $maxBodyBytes): void
 {
     $request = read_http_request($conn, $maxBodyBytes);
     if (isset($request["error"])) {
@@ -260,7 +296,11 @@ function handle_connection($conn, string $agentScript, int $timeout, int $maxBod
 
     $path = parse_url($request["target"], PHP_URL_PATH) ?: "/";
     if ($request["method"] === "GET" && $path === "/health") {
-        send_json($conn, 200, ["ok" => true, "configured" => is_file($agentScript)]);
+        send_json($conn, 200, [
+            "ok" => true,
+            "configured" => $agentScript !== null && is_file($agentScript),
+            "agent" => $agentScript,
+        ]);
         return;
     }
 
@@ -315,12 +355,21 @@ chmod($socketPath, 0666);
 file_put_contents($pidFile, getmypid() . PHP_EOL);
 relay_log("listening on {$socketPath}");
 
+$startupAgent = agent_script_path();
+if ($startupAgent === null) {
+    relay_log("no Apprise agent definition at " . AGENT_DEFINITION, LOG_WARNING);
+} else {
+    relay_log("using notification agent {$startupAgent}");
+}
+
 while ($running) {
     $conn = @stream_socket_accept($server, 1);
     if (!$conn) {
         continue;
     }
-    handle_connection($conn, $agentScript, $requestTimeout, $maxBodyBytes);
+    // Resolved per request: the daemon starts before the agent is configured,
+    // and the agent can be enabled, disabled, or renamed while it runs.
+    handle_connection($conn, agent_script_path(), $requestTimeout, $maxBodyBytes);
     fclose($conn);
 }
 
