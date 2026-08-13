@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.1](https://github.com/unraid/apprise-plugin/compare/v0.2.0...v0.2.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **agent:** install icon under the name Dynamix looks up ([#36](https://github.com/unraid/apprise-plugin/issues/36)) ([d180efd](https://github.com/unraid/apprise-plugin/commit/d180efd8cd6dc49c65969b8f61ea2358da0de32d))
+* stop duplicate notifications and repair the container relay ([#38](https://github.com/unraid/apprise-plugin/issues/38)) ([652da6a](https://github.com/unraid/apprise-plugin/commit/652da6ae2fa9628a7368557a5c4d8190f3a83406))
+* update apprise-go to v0.3.1 ([#39](https://github.com/unraid/apprise-plugin/issues/39)) ([e7e6ab1](https://github.com/unraid/apprise-plugin/commit/e7e6ab138fb6fe36486236bbab0cbc851cbfc271))
+
 ## [0.2.0](https://github.com/unraid/apprise-plugin/compare/v0.1.5...v0.2.0) (2026-07-09)
 
 
