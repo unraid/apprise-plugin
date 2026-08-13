@@ -6,12 +6,12 @@
 <!ENTITY version        "2026.07.09.1355.23-0.2.0">
 <!ENTITY pluginVersion  "0.2.0">
 <!ENTITY releaseTag     "v0.2.0">
-<!ENTITY appriseVersion "v0.2.8">
+<!ENTITY appriseVersion "v0.3.1">
 <!ENTITY releaseURL     "https://raw.githubusercontent.com/unraid/apprise-plugin/&releaseTag;">
 <!ENTITY appriseRepoURL "https://raw.githubusercontent.com/unraid/apprise-go/&appriseVersion;">
 <!ENTITY pluginURL      "https://github.com/unraid/apprise-plugin/releases/latest/download/apprise.plg">
 <!ENTITY appriseURL     "https://github.com/unraid/apprise-go/releases/download/&appriseVersion;/apprise-go-linux-amd64">
-<!ENTITY appriseMD5     "2190f004dabb875677b05dc732314f6f">
+<!ENTITY appriseMD5     "dd0ac736abfd1339bf7c7032ad8e8da4">
 <!ENTITY appriseLicenseURL "&appriseRepoURL;/LICENSE">
 <!ENTITY appriseLicenseMD5 "74aac17862618045268cd493914a5b51">
 <!ENTITY appriseNoticeURL "&appriseRepoURL;/NOTICE.md">
