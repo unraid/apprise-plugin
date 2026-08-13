@@ -176,6 +176,15 @@ if [ -f "$notify_dir/agents/Apprise_Notification_Agent.sh" ] || [ -f "$notify_di
       rm -f "$orphan"
       echo " Removed orphaned pre-rename notification agent $orphan"
       echo " It duplicated every notification. Saved to $orphan_backup_dir/Apprise.sh.$state"
+      # Removing an enabled orphan while the current agent is disabled leaves no
+      # Apprise sender at all. That is what Disabled is supposed to mean, but say
+      # so plainly so nobody is left wondering where their notifications went.
+      if [ "$state" = "agents" ]; then
+        if [ ! -f "$notify_dir/agents/Apprise_Notification_Agent.sh" ]; then
+          echo " NOTE: Apprise Notification Agent is currently disabled, so Apprise is no longer sending anything."
+          echo " Enable it under Settings, Notifications, Notification Agents to resume notifications."
+        fi
+      fi
     fi
   done
 fi
